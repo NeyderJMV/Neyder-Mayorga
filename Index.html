@@ -20,6 +20,15 @@
 <div class="frame">
   <aside class="rail">
     <a class="brand" href="#inicio">Neyder Mayorga<small>Desarrollo web y soluciones digitales</small></a>
+    <ul class="rail-info">
+      <li>Guayaquil, Ecuador</li>
+      <li><a id="rail-mail" href="#">Correo</a></li>
+      <li><a data-wa href="#">+593 96 854 8680</a></li>
+    </ul>
+    <a class="btn" data-wa href="https://wa.me/593968548680?text=Hola%20Neyder%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20hablar%20de%20un%20proyecto.">Hablemos</a>
+  </aside>
+
+  <header class="topbar" id="topbar">
     <nav aria-label="Principal">
       <a href="#inicio">Inicio</a>
       <a href="#sobre-mi">Sobre mí</a>
@@ -28,8 +37,7 @@
       <a href="#proceso">Proceso</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <a class="btn" data-wa href="https://wa.me/593968548680?text=Hola%20Neyder%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20hablar%20de%20un%20proyecto.">Hablemos</a>
-  </aside>
+  </header>
 
   <main id="contenido">
     <section class="hero" id="inicio">
@@ -98,16 +106,20 @@
     </section>
     <section id="contacto">
       <h2 class="reveal">¿Tienes una idea o un proyecto en mente?</h2>
-      <p class="sub reveal">Cuéntame qué necesitas. Al enviar el formulario se abre WhatsApp con tu mensaje listo para mandar.</p>
+      <p class="sub reveal">Cuéntame qué necesitas y déjame tu número. Recibo tu mensaje en mi correo y te respondo lo antes posible.</p>
       <form id="contact-form" class="reveal" novalidate>
         <label for="name">Tu nombre</label>
         <input id="name" name="name" autocomplete="name" required>
+        <label for="phone">Tu número de contacto</label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 099 123 4567" required>
         <label for="type">¿Qué necesitas?</label>
         <select id="type" name="type"><option>Landing page</option><option>Página de servicios</option><option>Catálogo digital</option><option>Formulario de contacto</option><option>Otra cosa</option></select>
         <label for="msg">Cuéntame brevemente tu proyecto</label>
         <textarea id="msg" name="msg" rows="4" required></textarea>
-        <p class="error" id="form-error" role="alert" hidden>Completa tu nombre y una breve descripción para continuar.</p>
-        <button class="btn" type="submit">Escribirme por WhatsApp</button>
+        <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="error" id="form-error" role="alert" hidden></p>
+        <p class="form-ok" id="form-ok" role="status" hidden>¡Listo! Recibí tu idea. Te respondo muy pronto por el número que dejaste.</p>
+        <button class="btn" id="form-btn" type="submit">Enviar mi idea</button>
       </form>
       <a class="btn btn-ghost wa-direct" data-wa href="https://wa.me/593968548680?text=Hola%20Neyder%2C%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20hablar%20de%20un%20proyecto.">O escríbeme directo a WhatsApp</a>
       <div class="links">

@@ -74,6 +74,8 @@ function setupWhatsApp() {
 
 function setupMisc() {
   TOOLS.forEach((t) => $("#tools").append(el("li", { textContent: t })));
+  $("#rail-mail").href = "mailto:" + CONFIG.email;
+  $("#rail-mail").textContent = CONFIG.email;
   $("#mail-link").href = "mailto:" + CONFIG.email;
   $("#mail-link").textContent = CONFIG.email;
   [["#gh-link", CONFIG.github], ["#li-link", CONFIG.linkedin]].forEach(([s, u]) => {
@@ -82,15 +84,50 @@ function setupMisc() {
 }
 
 function setupForm() {
-  const f = $("#contact-form"), err = $("#form-error");
-  f.addEventListener("submit", (e) => {
+  const f = $("#contact-form"), err = $("#form-error"), ok = $("#form-ok"), btn = $("#form-btn");
+  const waUrl = `https://wa.me/${CONFIG.whatsapp}`;
+  f.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const name = f.name.value.trim(), msg = f.msg.value.trim();
-    if (!name || !msg) { err.hidden = false; return; }
+    ok.hidden = true;
+    const name = f.name.value.trim(), phone = f.phone.value.trim(), msg = f.msg.value.trim();
+    if (f._honey.value) return;                       // anti-spam
+    if (!name || !msg || phone.replace(/\D/g, "").length < 7) {
+      err.textContent = "Completa tu nombre, un número de contacto válido y una breve descripción.";
+      err.hidden = false; return;
+    }
     err.hidden = true;
-    const text = `Hola Neyder, soy ${name}. Necesito: ${f.type.value}.\n\n${msg}`;
-    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+    btn.disabled = true; btn.textContent = "Enviando...";
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${CONFIG.email}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          "Nombre": name,
+          "Número de contacto": phone,
+          "Qué necesita": f.type.value,
+          "Descripción del proyecto": msg,
+          _subject: `Nuevo proyecto desde tu portafolio: ${name}`,
+          _template: "table",
+          _captcha: "false"
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || String(data.success) !== "true") throw new Error(data.message || "Error al enviar");
+      f.reset(); ok.hidden = false;
+    } catch (_) {
+      err.innerHTML = `No se pudo enviar el mensaje. Escríbeme directo por <a href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>.`;
+      err.hidden = false;
+    } finally {
+      btn.disabled = false; btn.textContent = "Enviar mi idea";
+    }
   });
+}
+
+function setupTopbar() {
+  const bar = $("#topbar"), hero = $("#inicio");
+  const update = () => bar.classList.toggle("light", window.scrollY > hero.offsetHeight - 90);
+  update();
+  window.addEventListener("scroll", update, { passive: true });
 }
 
 function setupObservers() {
@@ -99,7 +136,7 @@ function setupObservers() {
   }, { threshold: 0.12 });
   document.querySelectorAll(".reveal").forEach((n) => io.observe(n));
 
-  const links = [...document.querySelectorAll(".rail nav a")];
+  const links = [...document.querySelectorAll(".topbar a")];
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (e.isIntersecting) links.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + e.target.id)));
@@ -113,3 +150,4 @@ setupWhatsApp();
 setupMisc();
 setupForm();
 setupObservers();
+setupTopbar();
