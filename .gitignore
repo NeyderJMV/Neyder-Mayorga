@@ -1,0 +1,9 @@
+# Ocultar dependencias de Node.js (ocupa mucho espacio y no se sube a GitHub)
+node_modules/
+
+# Ocultar tus credenciales secretas y contraseñas
+.env
+
+# Ocultar archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db
